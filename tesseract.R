@@ -50,11 +50,21 @@ images_test <- lapply(files_test, image_read)
 laenge_test <- length(images_test)
 arbeitsliste_filenames <- str_sub(files_test, ,-5)
 z <- 1
+df <- data.frame()
 while(z <= laenge_test ) {
- images_test[[z]] %>%
+  file <-  images_test[[z]] %>%
    image_convert(type = 'Grayscale') %>%
-   image_write(format = 'pdf', 
-                path = paste0("C:/Users/Nicolas Saameli/Desktop/1/S",arbeitsliste_filenames[z],".pdf")) %>%
+   image_write(format = 'png')
+    text <- tesseract::ocr(file, engine = tesseract("deu"))
+    write(text, file = paste0("C:/Users/Nicolas Saameli/Desktop/1/S",arbeitsliste_filenames[z],".txt"))
+    images_test[[z]] %>%
+    image_convert(type = 'Grayscale') %>%
+    image_write(format = 'pdf', 
+                     path = paste0("C:/Users/Nicolas Saameli/Desktop/1/S",arbeitsliste_filenames[z],".pdf"))
+    filename <- paste0("C:/Users/Nicolas Saameli/Desktop/1/S",arbeitsliste_filenames[z],".txt")
+    seite <- arbeitsliste_filenames[z]
+    neue_daten <- cbind.data.frame(seite, filename, text)
+    df <- rbind.data.frame(df,neue_daten)
 z <- z+1
 }
 
