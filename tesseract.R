@@ -38,22 +38,23 @@ x <- str_subset(files$filemitpfad, pattern = "hobbyund")
 x
 unlink(x)
 
-#files bearbeiten
+#files bearbeiten – im Moment in kopiertem Testordner
 
 setwd("C:/Users/Nicolas Saameli/Desktop/1")
 files_test <- list.files()
 
+images_test <- lapply(files_test, image_read)
+
+
+
+images_test[[3]]
 y <- 3
-input <- image_read(files_test)
 
-for (i in files_test) {
-
- input %>%
+for (i in length(images_test)) {
+ images_test[[i]] %>%
    image_convert(type = 'Grayscale') %>%
-   image_resize(geometry = "A4")
-   image_write(format = 'png', 
-                density = '300x300',
-                path = paste0("C:/Users/Nicolas Saameli/Desktop/1/S",y,".png"))
+   image_write(format = 'pdf', 
+                path = paste0("C:/Users/Nicolas Saameli/Desktop/1/S",y,".pdf"))
 y <- y+1
 print(y)
 }
