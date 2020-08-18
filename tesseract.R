@@ -2,6 +2,9 @@ if (!require('tidyverse')) {install.packages('tidyverse')};library('tidyverse')
 if (!require('tesseract')) {install.packages('tesseract')};library('tesseract')
 if (!require('magick')) {install.packages('magick')};library('magick')
 if (!require('pdftools')) {install.packages('pdftools')};library('pdftools')
+if (!require('gtools')) {install.packages('gtools')};library('gtools')
+
+
 
 #Files auflisten – str_subset wird nach dem ersten Mal obsolet
 ordner_liste <- list.dirs("G:/M&K") %>%
@@ -41,71 +44,18 @@ unlink(x)
 #files bearbeiten – im Moment in kopiertem Testordner
 
 setwd("C:/Users/Nicolas Saameli/Desktop/1")
-files_test <- list.files()
-
+files_test <- list.files() %>%
+  mixedsort()
 images_test <- lapply(files_test, image_read)
-
-
-
-images_test[[3]]
-y <- 3
-
-for (i in length(images_test)) {
- images_test[[i]] %>%
+laenge_test <- length(images_test)
+arbeitsliste_filenames <- str_sub(files_test, ,-5)
+z <- 1
+while(z <= laenge_test ) {
+ images_test[[z]] %>%
    image_convert(type = 'Grayscale') %>%
    image_write(format = 'pdf', 
-                path = paste0("C:/Users/Nicolas Saameli/Desktop/1/S",y,".pdf"))
-y <- y+1
-print(y)
+                path = paste0("C:/Users/Nicolas Saameli/Desktop/1/S",arbeitsliste_filenames[z],".pdf")) %>%
+z <- z+1
 }
 
-y
-dataframes_aufgesplittet
-files
 
-filesliste <- rbind.data.frame(
-  lapply(
-    ordner_liste, function(
-      ordner_oeffnen){
-  list.files(
-    ordner_liste)
-}),ordner_liste)
-
-filesliste
-
-
-
-
-
-files <- list.files(pattern = ".jpg")
-filesmitpfad <- paste0(ordner,"/",files)
-filesmitpfad
-seiten <- length(filesmitpfad)+2
-df_bilder <- data.frame(filesmitpfad,3:seiten,jahr,nummer)
-df_bilder
-
-
-
-
-df_bilder
-
-filesmitpfad
-
-
-input <- image_read("C:/Users/Nicolas Saameli/Desktop/1979/1/hobbyundkleincomputer_1979_44.jpg")
-input
-
-text <- input %>%
-  image_resize("2000x") %>%
-  image_convert(type = 'Grayscale') %>%
-  image_trim(fuzz = 40) %>%
-  image_write(format = 'png', density = '300x300') %>%
-  tesseract::ocr() 
-
-
-
-install.packages("installr")
-
-library(installr)
-
-updateR()
