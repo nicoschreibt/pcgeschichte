@@ -4,8 +4,6 @@ if (!require('magick')) {install.packages('magick')};library('magick')
 if (!require('pdftools')) {install.packages('pdftools')};library('pdftools')
 if (!require('gtools')) {install.packages('gtools')};library('gtools')
 
-
-
 #Files auflisten – str_subset wird nach dem ersten Mal obsolet
 ordner_liste <- list.dirs("G:/M&K") %>%
   str_subset("/..../.")
@@ -13,7 +11,6 @@ ordner_liste <- list.dirs("G:/M&K") %>%
 #Filenames zusammensetzen
 
 files <- data.frame(filemitpfad=list.files("G:/M&K", full.names = T, include.dirs = T, recursive = T))
-
 
 files$filemitpfad <- as.character(files$filemitpfad)
 
@@ -43,27 +40,38 @@ unlink(x)
 
 #files bearbeiten – im Moment in kopiertem Testordner
 
-setwd("C:/Users/Nicolas Saameli/Desktop/1")
-files_test <- list.files() %>%
+wd <- "C:/Users/Nicolas Saameli/Desktop/1"
+setwd(wd)
+files_test <- list.files(recursive = T, pattern = ".jpg") %>%
   mixedsort()
-images_test <- lapply(files_test, image_read)
-laenge_test <- length(images_test)
-arbeitsliste_filenames <- str_sub(files_test, ,-5)
+arbeitsliste_filenames_ohnetyp_ohnepfad <- str_sub(files_test,start = 1,end = -4)
+arbeitsliste_filenames_ohnetyp_ohnepfad
+arbeitsliste_filenames_ohnetyp <- paste0(wd, "/",arbeitsliste_filenames_ohnetyp_ohnepfad)
+laenge_test <- length(files_test)
 z <- 1
 df <- data.frame()
+
+
+
 while(z <= laenge_test ) {
-  file <-  images_test[[z]] %>%
+  x <- paste0(wd,"/",files_test[z])
+  pdfpfad <- paste0(arbeitsliste_filenames_ohnetyp[z],"pdf")
+  txtpfad <- paste0(arbeitsliste_filenames_ohnetyp[z],"txt")
+  images_test <- image_read(x)
+  
+      file <-  images_test %>%
    image_convert(type = 'Grayscale') %>%
    image_write(format = 'png')
+    
     text <- tesseract::ocr(file, engine = tesseract("deu"))
-    write(text, file = paste0("C:/Users/Nicolas Saameli/Desktop/1/S",arbeitsliste_filenames[z],".txt"))
-    images_test[[z]] %>%
+    
+    write(text, file = txtpfad)
+    
+    images_test %>%
     image_convert(type = 'Grayscale') %>%
     image_write(format = 'pdf', 
-                     path = paste0("C:/Users/Nicolas Saameli/Desktop/1/S",arbeitsliste_filenames[z],".pdf"))
-    filename <- paste0("C:/Users/Nicolas Saameli/Desktop/1/S",arbeitsliste_filenames[z],".txt")
-    seite <- arbeitsliste_filenames[z]
-    neue_daten <- cbind.data.frame(seite, filename, text)
+                     path = pdfpfad)
+    neue_daten <- cbind.data.frame(pdfpfad, text)
     df <- rbind.data.frame(df,neue_daten)
 z <- z+1
 }
