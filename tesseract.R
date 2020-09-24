@@ -225,3 +225,21 @@ while (x <= 5214) {
   print(x)
   x <- x+1
 }
+
+
+#Files zurückkopieren
+
+wd <- "G:/M&K_1/"
+to <- "E:/arbeitsordner_txt/"
+
+files_txt_alt <- list.files(path = wd, full.names = T, include.dirs = F, recursive = T, pattern = ".txt")
+
+unlink(files_txt_alt)
+files_txt_neu <- data.frame(list.files(to, pattern = ".txt", full.names = F))
+files_txt_neu_move <- list.files(to, pattern = ".txt", full.names = T)
+files_txt_neu_move
+files_txt_neu_split_df <- setNames(do.call(rbind.data.frame, stringr::str_split(files_txt_neu$list.files.to..pattern.....txt...full.names...F., pattern = "_")),c("a","b","c"))
+files_txt_neu_move
+neue_filenames <- paste0(wd, files_txt_neu_split_df$a, "/", files_txt_neu_split_df$b, "/",files_txt_neu_split_df$c )
+neue_filenames
+file.copy(from = files_txt_neu_move, to = neue_filenames)
