@@ -41,13 +41,11 @@ for (i in 1:length(df_random_sample$rowname)) {
 pfad_random_sample <- paste0(pfad_resultateordner, "random_sample_bayes.csv")
 
 write_csv(df_random_sample, path= paste0(pfad_random_sample))
-read(pfad_random_sample)
 
 
 #Bayes trainieren
 
-random_sample$werbung <- df_random_sample$werbung
-
+random_sample <- corpus(random_sample, text_field = )
 set.seed(300)
 id_train <- sample(1:521, 400, replace = F)
 random_sample$id_nummer <- 1:521

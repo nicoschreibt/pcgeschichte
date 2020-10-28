@@ -6,7 +6,7 @@ if (!require('gtools')) {install.packages('gtools')};library('gtools')
 
 #Filenames zusammensetzen
 
-wd <- "G:/M&K_1/1979/2"
+wd <- "G:/M&K_1/1979/"
 setwd(wd)
 files <- data.frame(filemitpfad=list.files(wd, full.names = T))
 files$filemitpfad <- as.character(files$filemitpfad)
